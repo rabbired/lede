@@ -13,6 +13,8 @@ wanselect=$(uci get syncdial.config.wanselect)
 wannum=$(uci get syncdial.config.wannum)
 oldframe=$(uci get syncdial.config.old_frame)
 bindwan=$(uci -q get syncdial.config.bindwan)
+#获取wan口mtu
+mtuwan=$(uci get network.wan.mtu)
 
 dial_type=$(uci get syncdial.config.dial_type)
 [ "$dial_type" -eq 2 ] && {
@@ -92,6 +94,8 @@ pppoe_if_add() {
 	uci set network.${1}.password=${5}
 	uci set network.${1}.metric=${2}
 	uci set network.${1}.macaddr=$NEW_MACADDR
+	#同步wan口mtu值
+    uci set network.${1}.mtu=$mtuwan
 	#gen firewall
 	uci add_list firewall.@zone[1].network=${1}
 }
